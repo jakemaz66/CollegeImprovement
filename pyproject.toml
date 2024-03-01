@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "collegeimprovement"
+name = "collegeimprovement-1"
 version = "0.1.0"
 description = ""
 authors = ["jakem <mazurkiewiczj@duq.edu>"]
@@ -7,8 +7,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+seaborn = "^0.13.2"
 pandas = "^2.2.1"
-numpy = "^1.26.4"
 
 
 [build-system]
