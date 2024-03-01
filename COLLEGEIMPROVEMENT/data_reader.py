@@ -29,6 +29,6 @@ def data_reader():
     return df
 
 if __name__ == '__main__':
-    data_reader()
+    df = data_reader()
 
     
