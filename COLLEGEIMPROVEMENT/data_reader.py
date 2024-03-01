@@ -1,23 +1,34 @@
 import pandas as pd
 import numpy as np
 
+def data_reader():
+    """
+    This function takes in the college data, loops over the years, and returns the concatenated
+    dataframes with just Duquesne University
+    """
 
-years_list = [
-    '1997_97', '1998_98', '1999_99', '2000_00', '2001_01', '2002_02', '2003_03', '2004_04', '2005_05',
-    '2006_06', '2007_07', '2008_08', '2009_09', '2010_10', '2011_11', '2012_12', '2013_13', '2014_14',
-    '2015_15', '2016_16', '2017_17', '2018_18', '2019_19', '2020_20', '2021_21', '2022_22'
-]
+    years_list = [
+        '1997_98', '1998_99', '1999_00', '2000_01', '2001_02', '2002_03', '2003_04', '2004_05', '2005_06',
+        '2006_07', '2007_08', '2008_09', '2009_10', '2010_11', '2011_12', '2012_13', '2013_14', '2014_15',
+        '2015_16', '2016_17', '2017_18', '2018_19', '2019_20', '2020_21', '2021_22'
+    ]
 
-dataframes = {}  
+    df = pd.read_csv(r'C:\Users\jakem\CollegeImprovement\COLLEGEIMPROVEMENT\data\data\MERGED1997_98_PP.csv')
 
-for year in years_list:
-    df = f'MERGED{year}_PP.csv'
-    #Filtering out dataframes for Duquesne
-    df = df.loc[df['INSTNM'] == 'Duquesne University']
+    dataframes = {}  
 
-    dataframes[year] = pd.read_csv(df)
+    for year in years_list:
+        df = pd.read_csv(fr'C:\Users\jakem\CollegeImprovement\COLLEGEIMPROVEMENT\data\data\MERGED{year}_PP.csv')
+        #Filtering out dataframes for Duquesne
+        df = df.loc[df['INSTNM'] == 'Duquesne University']
 
-#Concatenating dataframes
-df = pd.concat(dataframes.values())
+        dataframes[year] = df
+
+    #Concatenating dataframes
+    df = pd.concat(dataframes.values())
+    return df
+
+if __name__ == '__main__':
+    data_reader()
 
     
