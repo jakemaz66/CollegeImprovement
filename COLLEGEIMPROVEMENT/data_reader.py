@@ -14,9 +14,9 @@ def data_reader():
     ]
 
     columns_of_interest = ['CCSIZSET', 'ADM_RATE', 'TUITIONFEE_IN', 'IRPS_NRA', 'ADMCON7',
-                           'LOCALE2', 'TUITIONFEE_IN', 'AVGFACSAL', 'PFTFAC', 'INEXPFTE',
-                           'ENRL_ORIG_YR2_RT', 'UGDS', 'TRANS_4',
-                           'OPENADMP', 'BBRR4_FED_UG_NOPROG', 'BBRR3_FED_UG_NOPROG', 'BBRR2_FED_UG_NOPROG', 'BBRR1_FED_UG_NOPROG',
+                           'AVGFACSAL', 'PFTFAC',
+                           'UGDS', 'TRANS_4', 'INEXPFTE',
+                           'OPENADMP', 
                            'BOOKSUPPLY', 'ROOMBOARD_ON', 'OTHEREXPENSE_ON', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF',
                            'OTHEREXPENSE_FAM', 'STUFACR', 'IRPS_NRA', 'COUNT_NWNE_4YR', 'INSTNM', 'PRGMOFR',
                            'GRAD_DEBT_MDN_SUPP', 'MD_EARN_WNE_P10', 'COUNT_NWNE_P10'
