@@ -13,12 +13,13 @@ def data_reader():
         '2015_16', '2016_17', '2017_18', '2018_19', '2019_20', '2020_21', '2021_22'
     ]
 
-    columns_of_interest = ['CCSIZSET', 'ADM_RATE', 'SATVR75', 'SATMT75', 'PPTUG_EF',
-                           'NPT44_PRIV', 'TUITIONFEE_IN', 'AVGFACSAL', 'PFTFAC', 'INEXPFTE',
-                           'ENRL_ORIG_YR2_RT', 'FIRSTGEN_WDRAW_ORIG_YR3_RT', 'COMPL_RPY_7YR_RT',
-                           'GRAD_DEBT_MDN', 'BBRR2_FED_UG_NOPROG',
+    columns_of_interest = ['CCSIZSET', 'ADM_RATE', 'TUITIONFEE_IN', 'IRPS_NRA', 'ADMCON7',
+                           'LOCALE2', 'TUITIONFEE_IN', 'AVGFACSAL', 'PFTFAC', 'INEXPFTE',
+                           'ENRL_ORIG_YR2_RT', 'UGDS', 'TRANS_4',
+                           'OPENADMP', 'BBRR4_FED_UG_NOPROG', 'BBRR3_FED_UG_NOPROG', 'BBRR2_FED_UG_NOPROG', 'BBRR1_FED_UG_NOPROG',
                            'BOOKSUPPLY', 'ROOMBOARD_ON', 'OTHEREXPENSE_ON', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF',
-                           'OTHEREXPENSE_FAM', 'STUFACR', 'IRPS_NRA', 'COUNT_NWNE_4YR', 'INSTNM'
+                           'OTHEREXPENSE_FAM', 'STUFACR', 'IRPS_NRA', 'COUNT_NWNE_4YR', 'INSTNM', 'PRGMOFR',
+                           'GRAD_DEBT_MDN_SUPP', 'MD_EARN_WNE_P10', 'COUNT_NWNE_P10'
     ]   
 
     dataframes = {}  
@@ -45,8 +46,8 @@ def data_reader_study():
 
     years_list = ['1415_1516', '1516_1617', '1617_1718', '1718_1819', '1819_1920']
 
-    columns_of_interest = ['CIPDESC', 'CREDLEV', 'CREDDESC', 'DEBT_ALL_STGP_ANY_MEAN',
-                        'IPEDSCOUNT1', 'IPEDSCOUNT2', 'EARN_MDN_1YR', 'INSTNM']
+    columns_of_interest = ['CIPDESC', 'CREDLEV', 'CREDDESC', 
+                        'IPEDSCOUNT1', 'IPEDSCOUNT2', 'INSTNM']
 
     dataframes = {}
 
