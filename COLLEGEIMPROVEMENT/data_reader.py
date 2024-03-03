@@ -13,13 +13,13 @@ def data_reader():
         '2015_16', '2016_17', '2017_18', '2018_19', '2019_20', '2020_21', '2021_22'
     ]
 
-    columns_of_interest = ['CCSIZSET', 'ADM_RATE', 'TUITIONFEE_IN', 'IRPS_NRA', 'ADMCON7',
+    columns_of_interest = ['ADM_RATE', 'TUITIONFEE_IN', 'IRPS_NRA', 'ADMCON7',
                            'AVGFACSAL', 'PFTFAC',
                            'UGDS', 'TRANS_4', 'INEXPFTE',
                            'OPENADMP', 
-                           'BOOKSUPPLY', 'ROOMBOARD_ON', 'OTHEREXPENSE_ON', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF',
+                           'BOOKSUPPLY', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF',
                            'OTHEREXPENSE_FAM', 'STUFACR', 'IRPS_NRA', 'COUNT_NWNE_4YR', 'INSTNM', 'PRGMOFR',
-                           'GRAD_DEBT_MDN_SUPP', 'MD_EARN_WNE_P10', 'COUNT_NWNE_P10'
+                           'GRAD_DEBT_MDN_SUPP', 'MD_EARN_WNE_P10', 
     ]   
 
     dataframes = {}  
@@ -66,6 +66,7 @@ def data_reader_study():
 
 if __name__ == '__main__':
     df = data_reader()
+    df.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile.csv')
     print(df.head())
 
     
