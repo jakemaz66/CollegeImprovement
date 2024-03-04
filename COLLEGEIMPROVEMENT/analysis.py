@@ -1,4 +1,4 @@
-from COLLEGEIMPROVEMENT import regression
+from COLLEGEIMPROVEMENT.models import regression
 
 reg = regression.reg
 

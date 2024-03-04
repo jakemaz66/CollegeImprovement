@@ -1,5 +1,5 @@
 from sklearn.model_selection import GridSearchCV
-from COLLEGEIMPROVEMENT import regression
+from COLLEGEIMPROVEMENT.models import regression
 
 rfr = regression.rfr
 svm = regression.svm
