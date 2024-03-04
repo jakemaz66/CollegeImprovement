@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 from sklearn.impute import KNNImputer
+from xgboost import XGBRegressor
 
 #Reading in my dataframes
 df1 = pd.read_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile.csv')
@@ -37,12 +38,7 @@ df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].fillna(df1.groupby('INSTNM')['MD
 
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7','AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR',
            'PRGMOFR', 'MD_EARN_WNE_1YR']]
-
-column_medians = df_model.median()
-
-# Fill NaN values with the column medians
-df_model = df_model.fillna(column_medians)
-
+#Dropping rest of NaNs
 df_model.dropna(inplace=True)
 
 #Splitting the data
@@ -59,23 +55,27 @@ scaler = StandardScaler()
 scaled_x = scaler.fit_transform(X_train)
 scaled_x_test = scaler.fit_transform(X_test)
 
-#Building Regression models
+#Building Regression models and fitting them to data
 rfr = RandomForestRegressor()
 svm1 = svm.SVR()
 reg = LinearRegression()
+xgb = XGBRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
 
 rfr.fit(scaled_x, y_train)
 svm1.fit(scaled_x, y_train)
 reg.fit(scaled_x, y_train)
+xgb.fit(scaled_x, y_train)
 
 #Calculating Errors
 random_error = mean_squared_error(y_test, rfr.predict(scaled_x_test))
 svm_error = mean_squared_error(y_test, svm1.predict(X_test))
 regression_error = mean_squared_error(y_test, reg.predict(scaled_x_test))
+xgb_error = mean_squared_error(y_test, xgb.predict(scaled_x_test))
 
 print(f'The Random Forest Error is: {random_error}')
 print(f'The Support Vector Machine Error is: {svm_error}')
 print(f'The Linear Regression Error is: {regression_error}')
+print(f'The XGBoost Regression Error is: {xgb_error}')
 
 #Predicting Duquesne
 Duquesne = df1[df1['INSTNM'] == 'Duquesne University']
@@ -88,4 +88,4 @@ y = Duquesne['MD_EARN_WNE_1YR']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 X_train = scaler.transform(X_train)
 
-print(f'Duquesne Estimated Median: {rfr.predict(X_train)}')
+print(f'Duquesne Estimated Median: {xgb.predict(X_train)}')
