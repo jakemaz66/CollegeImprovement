@@ -1,3 +1,4 @@
+from sklearn.experimental import enable_iterative_imputer 
 import pandas as pd
 import numpy as np
 from COLLEGEIMPROVEMENT import data_reader
@@ -9,6 +10,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 from sklearn.impute import KNNImputer
+
+from sklearn.impute import IterativeImputer
 
 #Reading in my dataframes
 df1 = pd.read_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile.csv')
@@ -25,24 +28,26 @@ df1['AVGFACSAL'] = df1['AVGFACSAL'].fillna(df1.groupby('INSTNM')['AVGFACSAL'].tr
 df1['PFTFAC'] = df1['PFTFAC'].fillna(df1.groupby('INSTNM')['PFTFAC'].transform('median'))
 df1['INEXPFTE'] = df1['INEXPFTE'].fillna(df1.groupby('INSTNM')['INEXPFTE'].transform('median'))
 df1['STUFACR'] = df1['STUFACR'].fillna(df1.groupby('INSTNM')['STUFACR'].transform('median'))
-df1['WDRAW_ORIG_YR2_RT'] = df1['WDRAW_ORIG_YR2_RT'].replace('nan', np.nan)
-df1['WDRAW_ORIG_YR2_RT'] = df1['WDRAW_ORIG_YR2_RT'].astype(float)
-df1['WDRAW_ORIG_YR2_RT'] = df1['WDRAW_ORIG_YR2_RT'].fillna(df1.groupby('INSTNM')['WDRAW_ORIG_YR2_RT'].transform('median'))
 
 df1['PRGMOFR'] = df1['PRGMOFR'].fillna(df1.groupby('INSTNM')['PRGMOFR'].transform('median'))
 
-df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].replace('nan', np.nan)
-df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].astype(float)
-df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].fillna(df1.groupby('INSTNM')['MD_EARN_WNE_1YR'].transform('median'))
+df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].replace('nan', np.nan)
+df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].astype(float)
+df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].fillna(df1.groupby('INSTNM')['GRAD_DEBT_MDN_SUPP'].transform('median'))
 
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7','AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR',
-           'PRGMOFR', 'MD_EARN_WNE_1YR']]
+           'PRGMOFR', 'GRAD_DEBT_MDN_SUPP']]
 
-column_medians = df_model.median()
 
-# Fill NaN values with the column medians
-df_model = df_model.fillna(column_medians)
+columns_to_impute = ['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
+                      'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR']
+numeric_columns = df_model[columns_to_impute]
+iterative_imputer = IterativeImputer(max_iter=10, random_state=0)  
+numeric_columns_imputed = pd.DataFrame(iterative_imputer.fit_transform(numeric_columns), columns=columns_to_impute)
 
+df_imputed = pd.concat([numeric_columns_imputed, df1.drop(columns=columns_to_impute)], axis=1)
+
+#Dropping rest
 df_model.dropna(inplace=True)
 
 #Splitting the data
@@ -50,7 +55,7 @@ X = df_model[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
         'STUFACR', 'PRGMOFR']]
 
-y = df_model['MD_EARN_WNE_1YR']
+y = df_model['GRAD_DEBT_MDN_SUPP']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -61,20 +66,20 @@ scaled_x_test = scaler.fit_transform(X_test)
 
 #Building Regression models
 rfr = RandomForestRegressor()
-svm1 = svm.SVR()
+#svm1 = svm.SVR()
 reg = LinearRegression()
 
 rfr.fit(scaled_x, y_train)
-svm1.fit(scaled_x, y_train)
+#svm1.fit(scaled_x, y_train)
 reg.fit(scaled_x, y_train)
 
 #Calculating Errors
 random_error = mean_squared_error(y_test, rfr.predict(scaled_x_test))
-svm_error = mean_squared_error(y_test, svm1.predict(X_test))
+#svm_error = mean_squared_error(y_test, svm1.predict(X_test))
 regression_error = mean_squared_error(y_test, reg.predict(scaled_x_test))
 
 print(f'The Random Forest Error is: {random_error}')
-print(f'The Support Vector Machine Error is: {svm_error}')
+#print(f'The Support Vector Machine Error is: {svm_error}')
 print(f'The Linear Regression Error is: {regression_error}')
 
 #Predicting Duquesne
@@ -83,9 +88,9 @@ X = Duquesne[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
          'STUFACR', 'PRGMOFR']]
 
-y = Duquesne['MD_EARN_WNE_1YR']
+y = Duquesne['GRAD_DEBT_MDN_SUPP']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-X_train = scaler.transform(X_train)
+scaler.fit_transform(X_train)
 
 print(f'Duquesne Estimated Median: {rfr.predict(X_train)}')

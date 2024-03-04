@@ -19,7 +19,7 @@ def data_reader():
                            'OPENADMP', 
                            'BOOKSUPPLY', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF',
                            'OTHEREXPENSE_FAM', 'STUFACR', 'IRPS_NRA', 'COUNT_NWNE_4YR', 'INSTNM', 'PRGMOFR',
-                           'GRAD_DEBT_MDN_SUPP', 'MD_EARN_WNE_P10', 
+                           'GRAD_DEBT_MDN_SUPP', 'MD_EARN_WNE_P10', 'WDRAW_ORIG_YR2_RT', 'MD_EARN_WNE_1YR'
     ]   
 
     dataframes = {}  
