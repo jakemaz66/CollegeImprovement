@@ -66,9 +66,9 @@ scaled_x = scaler.fit_transform(X_train)
 scaled_x_test = scaler.fit_transform(X_test)
 
 #Building Regression models
-rfr = RandomForestRegressor()
+rfr = RandomForestRegressor(max_depth= 20, min_samples_split= 5, n_estimators=50)
 svm1 = svm.SVR()
-reg = LinearRegression()
+reg = LinearRegression(fit_intercept=True, positive=False)
 xgb = XGBRegressor()
 
 rfr.fit(scaled_x, y_train)
@@ -95,7 +95,7 @@ X = Duquesne[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
 
 y = Duquesne['GRAD_DEBT_MDN_SUPP']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-scaler.transform(X_train)
+X_train2, X_test2, y_train2, y_test2 = train_test_split(X, y, test_size=0.2, random_state=42)
+scaler.transform(X_train2)
 
-print(f'Duquesne Estimated Median: {rfr.predict(X_train)}')
+print(f'Duquesne Estimated Median: {xgb.predict(X_train2)}')
