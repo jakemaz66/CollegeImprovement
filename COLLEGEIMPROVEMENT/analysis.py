@@ -1,5 +1,7 @@
-from COLLEGEIMPROVEMENT.models import regression
+from COLLEGEIMPROVEMENT.models import regression3
 
-reg = regression.reg
+reg = regression3.reg
 
-print("Coefficients of Regression Model:", reg.coef_)
+#Obtaning Weights of the Given Features
+for feature, coefficient in zip(regression3.X.columns, reg.coef_):
+    print(f"{feature}: {coefficient}")

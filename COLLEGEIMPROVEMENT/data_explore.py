@@ -1,5 +1,6 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def seaborn_scatter(data, xcol, ycol, title, xtitle, ytitle):
     """
@@ -19,7 +20,10 @@ def seaborn_scatter(data, xcol, ycol, title, xtitle, ytitle):
 
 if __name__ == '__main__':
     from COLLEGEIMPROVEMENT import data_reader
-    df = data_reader.data_reader()
+    df = pd.read_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\ImputedData.csv')
+    
+    seaborn_scatter(df,df['AVGFACSAL'], df['MD_EARN_WNE_1YR'], 'Average Faculty vs. Salary of Students Post Graduation',
+                    'Average Faculty Salary', 'Median Earnings of Students')
 
 
 

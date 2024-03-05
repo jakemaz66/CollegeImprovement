@@ -37,14 +37,17 @@ df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].astype(float)
 df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].fillna(df1.groupby('INSTNM')['MD_EARN_WNE_1YR'].transform('median'))
 
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7','AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR',
-           'PRGMOFR', 'MD_EARN_WNE_1YR']]
+           'PRGMOFR', 'MD_EARN_WNE_1YR', 'IRPS_NRA', 'UGDS']]
+
 #Dropping rest of NaNs
 df_model.dropna(inplace=True)
+
+df_model.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\ImputedData.csv')
 
 #Splitting the data
 X = df_model[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
-        'STUFACR', 'PRGMOFR']]
+        'STUFACR', 'PRGMOFR','IRPS_NRA', 'UGDS']]
 
 y = df_model['MD_EARN_WNE_1YR']
 
@@ -68,7 +71,7 @@ xgb.fit(scaled_x, y_train)
 
 #Calculating Errors
 random_error = mean_squared_error(y_test, rfr.predict(scaled_x_test))
-svm_error = mean_squared_error(y_test, svm1.predict(X_test))
+svm_error = mean_squared_error(y_test, svm1.predict(scaled_x_test))
 regression_error = mean_squared_error(y_test, reg.predict(scaled_x_test))
 xgb_error = mean_squared_error(y_test, xgb.predict(scaled_x_test))
 
@@ -81,7 +84,7 @@ print(f'The XGBoost Regression Error is: {xgb_error}')
 Duquesne = df1[df1['INSTNM'] == 'Duquesne University']
 X = Duquesne[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
-         'STUFACR', 'PRGMOFR']]
+         'STUFACR', 'PRGMOFR','IRPS_NRA', 'UGDS']]
 
 y = Duquesne['MD_EARN_WNE_1YR']
 

@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 from sklearn.impute import KNNImputer
+from xgboost import XGBRegressor
 
 from sklearn.impute import IterativeImputer
 
@@ -38,24 +39,24 @@ df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].fillna(df1.groupby('INSTNM
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7','AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR',
            'PRGMOFR', 'GRAD_DEBT_MDN_SUPP']]
 
-
+#Filling in rest of NaNs with the iterative imputer
 columns_to_impute = ['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
                       'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR']
 numeric_columns = df_model[columns_to_impute]
-iterative_imputer = IterativeImputer(max_iter=10, random_state=0)  
+iterative_imputer = IterativeImputer(max_iter=25, random_state=0)  
 numeric_columns_imputed = pd.DataFrame(iterative_imputer.fit_transform(numeric_columns), columns=columns_to_impute)
 
 df_imputed = pd.concat([numeric_columns_imputed, df1.drop(columns=columns_to_impute)], axis=1)
 
 #Dropping rest
-df_model.dropna(inplace=True)
+df_imputed.dropna(inplace=True)
 
 #Splitting the data
-X = df_model[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
+X = df_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
         'STUFACR', 'PRGMOFR']]
 
-y = df_model['GRAD_DEBT_MDN_SUPP']
+y = df_imputed['GRAD_DEBT_MDN_SUPP']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -66,21 +67,25 @@ scaled_x_test = scaler.fit_transform(X_test)
 
 #Building Regression models
 rfr = RandomForestRegressor()
-#svm1 = svm.SVR()
+svm1 = svm.SVR()
 reg = LinearRegression()
+xgb = XGBRegressor()
 
 rfr.fit(scaled_x, y_train)
-#svm1.fit(scaled_x, y_train)
+svm1.fit(scaled_x, y_train)
 reg.fit(scaled_x, y_train)
+xgb.fit(scaled_x, y_train)
 
 #Calculating Errors
 random_error = mean_squared_error(y_test, rfr.predict(scaled_x_test))
-#svm_error = mean_squared_error(y_test, svm1.predict(X_test))
+svm_error = mean_squared_error(y_test, svm1.predict(scaled_x_test))
 regression_error = mean_squared_error(y_test, reg.predict(scaled_x_test))
+xgb_error = mean_squared_error(y_test, xgb.predict(scaled_x_test))
 
 print(f'The Random Forest Error is: {random_error}')
-#print(f'The Support Vector Machine Error is: {svm_error}')
+print(f'The Support Vector Machine Error is: {svm_error}')
 print(f'The Linear Regression Error is: {regression_error}')
+print(f'TheXGBoost Error is: {xgb_error}')
 
 #Predicting Duquesne
 Duquesne = df1[df1['INSTNM'] == 'Duquesne University']
@@ -91,6 +96,6 @@ X = Duquesne[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
 y = Duquesne['GRAD_DEBT_MDN_SUPP']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-scaler.fit_transform(X_train)
+scaler.transform(X_train)
 
 print(f'Duquesne Estimated Median: {rfr.predict(X_train)}')

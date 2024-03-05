@@ -46,10 +46,10 @@ df1['COUNT_NWNE_4YR'] = df1['COUNT_NWNE_4YR'].replace('nan', np.nan)
 df1['COUNT_NWNE_4YR'] = df1['COUNT_NWNE_4YR'].astype(float)
 df1['COUNT_NWNE_4YR'] = df1['COUNT_NWNE_4YR'].fillna(df1.groupby('INSTNM')['COUNT_NWNE_4YR'].transform('median'))
 
+#Dropping all rows that have NaNs in target variable column
 df1.dropna(subset=['COUNT_NWNE_4YR'], inplace=True)
 
-
-#Filling in all other NaNs
+#Filling in all other NaNs using the KNN Imputer
 knnimpute = KNNImputer(n_neighbors=2)
 numeric_cols = df1.select_dtypes(include='number').columns
 
@@ -63,6 +63,7 @@ df1 = pd.concat([df_numeric_imputed, df1.drop(columns=numeric_cols)], axis=1)
 df1['EXPENSES'] = (df1['BOOKSUPPLY'] + df1['ROOMBOARD_OFF'] + df1['OTHEREXPENSE_OFF'] +   
                   df1['OTHEREXPENSE_FAM'])
 
+#Saving KNN Imputed value file (Takes a long time to compute)
 df1.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFileImputed2.csv')
 
 #Splitting the data
@@ -76,25 +77,24 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 #Scaling the data
 scaler = StandardScaler()
 scaled_x = scaler.fit_transform(X_train)
-
-print('HEY')
+scaled_x_test = scaler.fit_transform(X_test)
 
 #Building Regression models
 rfr = RandomForestRegressor()
-#svm1 = svm.SVR()
+svm1 = svm.SVR()
 reg = LinearRegression()
 
 rfr.fit(scaled_x, y_train)
-#svm1.fit(scaled_x, y_train)
+svm1.fit(scaled_x, y_train)
 reg.fit(scaled_x, y_train)
 
 #Calculating Errors
-random_error = mean_squared_error(y_test, rfr.predict(X_test))
-#svm_error = mean_squared_error(y_test, svm1.predict(X_test))
-regression_error = mean_squared_error(y_test, reg.predict(X_test))
+random_error = mean_squared_error(y_test, rfr.predict(scaled_x_test))
+svm_error = mean_squared_error(y_test, svm1.predict(scaled_x_test))
+regression_error = mean_squared_error(y_test, reg.predict(scaled_x_test))
 
 print(f'The Random Forest Error is: {random_error}')
-#print(f'The Support Vector Machine Error is: {svm_error}')
+print(f'The Support Vector Machine Error is: {svm_error}')
 print(f'The Linear Regression Error is: {regression_error}')
 
 #Predicting Duquesne
@@ -103,8 +103,9 @@ X = Duquesne[['ADM_RATE', 'TUITIONFEE_IN', 'IRPS_NRA', 'ADMCON7',
          'AVGFACSAL', 'PFTFAC', 'UGDS', 'TRANS_4', 'INEXPFTE',
          'OPENADMP', 'STUFACR', 'PRGMOFR']]
 y = Duquesne['MD_EARN_WNE_P10']
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-scaler.fit_transform(X_train)
+scaler.transform(X_train)
 
 print(f'Duquesne Estimated Median: {rfr.predict(X_train)}')
 
