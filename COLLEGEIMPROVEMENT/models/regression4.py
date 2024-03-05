@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 from sklearn.impute import KNNImputer
+from sklearn.preprocessing import PolynomialFeatures
 from xgboost import XGBRegressor
 
 from sklearn.impute import IterativeImputer
@@ -65,27 +66,42 @@ scaler = StandardScaler()
 scaled_x = scaler.fit_transform(X_train)
 scaled_x_test = scaler.fit_transform(X_test)
 
+#Creating Polynomial Regression
+degree = 6  
+poly = PolynomialFeatures(degree=degree)
+X_train_poly = poly.fit_transform(X_train) 
+X_test_poly = poly.transform(X_test) 
+
 #Building Regression models
 rfr = RandomForestRegressor(max_depth= 20, min_samples_split= 5, n_estimators=50)
 svm1 = svm.SVR()
 reg = LinearRegression(fit_intercept=True, positive=False)
-xgb = XGBRegressor()
+xgb = XGBRegressor(learning_rate=0.1, max_depth=3, n_estimators=100)
+poly_reg = LinearRegression()
 
 rfr.fit(scaled_x, y_train)
 svm1.fit(scaled_x, y_train)
 reg.fit(scaled_x, y_train)
 xgb.fit(scaled_x, y_train)
+poly_reg.fit(X_train_poly, y_train)
 
 #Calculating Errors
 random_error = mean_squared_error(y_test, rfr.predict(scaled_x_test))
 svm_error = mean_squared_error(y_test, svm1.predict(scaled_x_test))
 regression_error = mean_squared_error(y_test, reg.predict(scaled_x_test))
 xgb_error = mean_squared_error(y_test, xgb.predict(scaled_x_test))
+poly_error = mean_squared_error(y_test, poly_reg.predict(X_test_poly))
+
+errors = pd.DataFrame({
+    'Models': ['Random Forest', 'Linear Regression', 'SVM', 'XGBoost', 'Polynomial Regression'],
+    'Errors': [random_error, regression_error, svm_error, xgb_error, poly_error]
+})
 
 print(f'The Random Forest Error is: {random_error}')
 print(f'The Support Vector Machine Error is: {svm_error}')
 print(f'The Linear Regression Error is: {regression_error}')
-print(f'TheXGBoost Error is: {xgb_error}')
+print(f'The XGBoost Error is: {xgb_error}')
+print(f'The Polynomial Regression Error is: {poly_error}')
 
 #Predicting Duquesne
 Duquesne = df1[df1['INSTNM'] == 'Duquesne University']
