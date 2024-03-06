@@ -19,7 +19,8 @@ def data_reader():
                            'OPENADMP', 
                            'BOOKSUPPLY', 'ROOMBOARD_OFF', 'OTHEREXPENSE_OFF',
                            'OTHEREXPENSE_FAM', 'STUFACR', 'IRPS_NRA', 'COUNT_NWNE_4YR', 'INSTNM', 'PRGMOFR',
-                           'GRAD_DEBT_MDN_SUPP', 'MD_EARN_WNE_P10', 'WDRAW_ORIG_YR2_RT', 'MD_EARN_WNE_1YR'
+                           'GRAD_DEBT_MDN_SUPP', 'MD_EARN_WNE_P10', 'WDRAW_ORIG_YR2_RT', 'MD_EARN_WNE_1YR',
+                           'Year'
     ]   
 
     #Creating Empty Dictionary to store data frames in
@@ -28,6 +29,8 @@ def data_reader():
     #Iterating through years and concatenating dataframes
     for year in years_list:
         df = pd.read_csv(fr'C:\Users\jakem\CollegeImprovement\COLLEGEIMPROVEMENT\data\data\MERGED{year}_PP.csv')
+
+        df['Year'] = year
 
         df = df[columns_of_interest]
         dataframes[year] = df
@@ -62,6 +65,9 @@ def data_reader_study():
 if __name__ == '__main__':
     df = data_reader()
     df.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile.csv')
+    pd.set_option('display.max_columns', None)  
+    pd.set_option('display.max_rows', None)
+    print(df.isna().sum())
    
 
     

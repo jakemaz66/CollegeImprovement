@@ -33,12 +33,12 @@ df1['STUFACR'] = df1['STUFACR'].fillna(df1.groupby('INSTNM')['STUFACR'].transfor
 
 df1['PRGMOFR'] = df1['PRGMOFR'].fillna(df1.groupby('INSTNM')['PRGMOFR'].transform('median'))
 
-df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].replace('nan', np.nan)
-df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].astype(float)
-df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].fillna(df1.groupby('INSTNM')['GRAD_DEBT_MDN_SUPP'].transform('median'))
+df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].replace('nan', np.nan)
+df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].astype(float)
+df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].fillna(df1.groupby('INSTNM')['MD_EARN_WNE_1YR'].transform('median'))
 
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7','AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR',
-           'PRGMOFR', 'GRAD_DEBT_MDN_SUPP']]
+           'PRGMOFR', 'MD_EARN_WNE_1YR']]
 
 #Filling in rest of NaNs with the iterative imputer
 columns_to_impute = ['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
@@ -57,7 +57,7 @@ X = df_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
         'STUFACR', 'PRGMOFR']]
 
-y = df_imputed['GRAD_DEBT_MDN_SUPP']
+y = df_imputed['MD_EARN_WNE_1YR']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -77,12 +77,14 @@ rfr = RandomForestRegressor(max_depth= 20, min_samples_split= 5, n_estimators=50
 svm1 = svm.SVR()
 reg = LinearRegression(fit_intercept=True, positive=False)
 xgb = XGBRegressor(learning_rate=0.1, max_depth=3, n_estimators=100)
+xgb_default = XGBRegressor()
 poly_reg = LinearRegression()
 
 rfr.fit(scaled_x, y_train)
 svm1.fit(scaled_x, y_train)
 reg.fit(scaled_x, y_train)
 xgb.fit(scaled_x, y_train)
+xgb_default.fit(scaled_x, y_train)
 poly_reg.fit(X_train_poly, y_train)
 
 #Calculating Errors
@@ -90,6 +92,7 @@ random_error = mean_squared_error(y_test, rfr.predict(scaled_x_test))
 svm_error = mean_squared_error(y_test, svm1.predict(scaled_x_test))
 regression_error = mean_squared_error(y_test, reg.predict(scaled_x_test))
 xgb_error = mean_squared_error(y_test, xgb.predict(scaled_x_test))
+xgb_default_error = mean_squared_error(y_test, xgb_default.predict(scaled_x_test))
 poly_error = mean_squared_error(y_test, poly_reg.predict(X_test_poly))
 
 errors = pd.DataFrame({
@@ -104,12 +107,12 @@ print(f'The XGBoost Error is: {xgb_error}')
 print(f'The Polynomial Regression Error is: {poly_error}')
 
 #Predicting Duquesne
-Duquesne = df1[df1['INSTNM'] == 'Duquesne University']
+Duquesne = df1[df1['INSTNM'] == 'University of Pittsburgh-Pittsburgh Campus']
 X = Duquesne[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
          'STUFACR', 'PRGMOFR']]
 
-y = Duquesne['GRAD_DEBT_MDN_SUPP']
+y = Duquesne['MD_EARN_WNE_1YR']
 
 X_train2, X_test2, y_train2, y_test2 = train_test_split(X, y, test_size=0.2, random_state=42)
 scaler.transform(X_train2)
