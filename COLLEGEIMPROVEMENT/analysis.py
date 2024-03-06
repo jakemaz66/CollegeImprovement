@@ -19,16 +19,20 @@ actual_pred = actual_pred['GRAD_DEBT_MDN_SUPP'].max()
 
 
 #FIGURE1
-#plt.figure(figsize=(14, 9))
+plt.figure(figsize=(14, 9))
 
-#sns.barplot(x='Feature', y='Coefficient', data=coefficients, palette='viridis')
+sns.barplot(x='Feature', y='Coefficient', data=coefficients, palette='viridis')
 
-#plt.title('Feature Coefficients in the Linear Regression Model')
-#plt.xlabel('Coefficient Value')
-#plt.ylabel('Feature')
+plt.title('Feature Coefficients in the Linear Regression Model')
+plt.xlabel('Coefficient Value', fontsize=16)
+plt.ylabel('Feature', fontsize=16)
 
-#plt.axhline(y=0, color='black', linestyle='--', linewidth=2)
-#plt.show()
+plt.axhline(y=0, color='black', linestyle='--', linewidth=2)
+
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+
+plt.show()
 
 
 #FIGURE4
