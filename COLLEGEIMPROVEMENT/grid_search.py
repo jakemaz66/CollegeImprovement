@@ -2,8 +2,10 @@ from sklearn.model_selection import GridSearchCV
 from COLLEGEIMPROVEMENT.models import regression4
 import pandas as pd
 
+#Setting option to see all results
 pd.set_option('display.max_colwidth', None)
 
+#Importing models
 rfr = regression4.rfr
 xgb = regression4.xgb
 reg = regression4.reg
@@ -18,12 +20,14 @@ param_grid_1 = {
     'min_samples_split': [2, 5, 10]
 }
 
+#Param grid for XGBoost
 param_grid_2 = {
     'n_estimators': [50, 100, 200],  
     'learning_rate': [0.01, 0.1, 0.2],  
     'max_depth': [3, 5, 7]  
 }
 
+#Param grid for linear regression
 param_grid_3 = {
     'fit_intercept': [True, False],    
     'positive': [False, True],       
@@ -43,6 +47,7 @@ best_params_rfr = clf.best_params_
 best_params_xgb = clf2.best_params_
 best_params_reg = clf3.best_params_
 
+#Printing the best hyperparameters in a table
 params_table = pd.DataFrame({'Model Type': ['Random Forest', 'XGBoost', 'Regression'],
         'Best Parameters for Model': [best_params_rfr, best_params_xgb, best_params_reg]})
 print(params_table)
