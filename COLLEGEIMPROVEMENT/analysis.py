@@ -7,6 +7,7 @@ import numpy as np
 #Importing Models and Errors
 reg = regression4.reg
 errors = regression4.errors
+errors2 = regression4.errors2
 df1 = regression4.df1
 xgb_error = regression4.xgb_error
 xgb_default_error = regression4.xgb_default_error
@@ -22,30 +23,30 @@ actual_pred = actual_pred['GRAD_DEBT_MDN_SUPP'].max()
 
 
 #FIGURE1
-plt.figure(figsize=(14, 9))
+#plt.figure(figsize=(14, 9))
 
-sns.barplot(x='Feature', y='Coefficient', data=coefficients, palette='viridis')
+#sns.barplot(x='Feature', y='Coefficient', data=coefficients, palette='viridis')
 
-plt.title('Feature Coefficients in the Linear Regression Model')
-plt.xlabel('Coefficient Value', fontsize=16)
-plt.ylabel('Feature', fontsize=16)
+#plt.title('Feature Coefficients in the Linear Regression Model')
+#plt.xlabel('Coefficient Value', fontsize=16)
+#plt.ylabel('Feature', fontsize=16)
 
-plt.axhline(y=0, color='black', linestyle='--', linewidth=2)
+#plt.axhline(y=0, color='black', linestyle='--', linewidth=2)
 
-plt.xticks(fontsize=14)
-plt.yticks(fontsize=14)
-plt.show()
+#plt.xticks(fontsize=14)
+#plt.yticks(fontsize=14)
+#plt.show()
 
 
 #FIGURE2
-#plt.figure(figsize=(14, 9))
+plt.figure(figsize=(14, 9))
 
-#sns.barplot(x='Models', y='Errors', data=errors, palette='viridis')
+sns.barplot(x='Models', y='Errors', data=errors2, palette='viridis')
 
-#plt.title('Regression Models and Total Error on Full Dataset')
-#plt.xlabel('Model Type')
-#plt.ylabel('Error')
-#plt.show()
+plt.title('Regression Models and Total Error on Full Dataset')
+plt.xlabel('Model Type')
+plt.ylabel('Error')
+plt.show()
 
 
 #FIGURE3

@@ -32,12 +32,12 @@ columns = ['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7', 'AVGFACSAL', 'PFTFAC', 'INEXP
 for col in columns:
     df1[col] = df1[col].fillna(df1.groupby('INSTNM')[col].transform('median'))
 
-df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].replace('nan', np.nan)
-df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].astype(float)
-df1['MD_EARN_WNE_1YR'] = df1['MD_EARN_WNE_1YR'].fillna(df1.groupby('INSTNM')['MD_EARN_WNE_1YR'].transform('median'))
+df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].replace('nan', np.nan)
+df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].astype(float)
+df1['GRAD_DEBT_MDN_SUPP'] = df1['GRAD_DEBT_MDN_SUPP'].fillna(df1.groupby('INSTNM')['GRAD_DEBT_MDN_SUPP'].transform('median'))
 
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7','AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR',
-           'PRGMOFR', 'MD_EARN_WNE_1YR']]
+           'PRGMOFR', 'GRAD_DEBT_MDN_SUPP']]
 
 #Filling in rest of NaNs with the iterative imputer
 columns_to_impute = ['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
@@ -56,7 +56,7 @@ X = df_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
         'STUFACR', 'PRGMOFR']]
 
-y = df_imputed['MD_EARN_WNE_1YR']
+y = df_imputed['GRAD_DEBT_MDN_SUPP']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -99,6 +99,12 @@ errors = pd.DataFrame({
     'Errors': [random_error, regression_error, svm_error, xgb_error, poly_error]
 })
 
+errors2 = pd.DataFrame({
+    'Models': ['Random Forest', 'Linear Regression', 'SVM', 'XGBoost'],
+    'Errors': [random_error, regression_error, svm_error, xgb_error]
+})
+
+
 print(f'The Random Forest Error is: {random_error}')
 print(f'The Support Vector Machine Error is: {svm_error}')
 print(f'The Linear Regression Error is: {regression_error}')
@@ -111,7 +117,7 @@ X = Duquesne[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7',
          'AVGFACSAL', 'INEXPFTE',
          'STUFACR', 'PRGMOFR']]
 
-y = Duquesne['MD_EARN_WNE_1YR']
+y = Duquesne['GRAD_DEBT_MDN_SUPP']
 
 X_train2, X_test2, y_train2, y_test2 = train_test_split(X, y, test_size=0.2, random_state=42)
 scaler.transform(X_train2)
