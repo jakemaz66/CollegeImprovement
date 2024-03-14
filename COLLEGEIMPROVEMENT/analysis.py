@@ -1,22 +1,22 @@
-from COLLEGEIMPROVEMENT.models import regression4
+from COLLEGEIMPROVEMENT.models import random_forest
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
 #Importing Models and Errors
-reg = regression4.reg
-errors = regression4.errors
-errors2 = regression4.errors2
-df1 = regression4.df1
-xgb_error = regression4.xgb_error
-xgb_default_error = regression4.xgb_default_error
+reg = random_forest.reg
+errors = random_forest.errors
+errors2 = random_forest.errors2
+df1 = random_forest.df1
+xgb_error = random_forest.xgb_error
+xgb_default_error = random_forest.xgb_default_error
 
 #Obtaining coefficient values form regression model
-coefficients = pd.DataFrame({'Feature': regression4.X.columns, 'Coefficient': reg.coef_})
+coefficients = pd.DataFrame({'Feature': random_forest.X.columns, 'Coefficient': reg.coef_})
 
 #Obtaining predcitions from models
-recent_pred = regression4.xgb.predict(regression4.X_train2)
+recent_pred = random_forest.xgb.predict(random_forest.X_train2)
 recent_pred = np.median(recent_pred)
 actual_pred = df1[(df1['INSTNM'] == 'University of Pittsburgh-Pittsburgh Campus') & (df1['Year'] == '2019_20')]
 actual_pred = actual_pred['GRAD_DEBT_MDN_SUPP'].max()

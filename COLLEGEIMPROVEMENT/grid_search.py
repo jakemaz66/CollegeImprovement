@@ -1,17 +1,17 @@
 from sklearn.model_selection import GridSearchCV
-from COLLEGEIMPROVEMENT.models import regression4
+from COLLEGEIMPROVEMENT.models import random_forest
 import pandas as pd
 
 #Setting option to see all results
 pd.set_option('display.max_colwidth', None)
 
 #Importing models
-rfr = regression4.rfr
-xgb = regression4.xgb
-reg = regression4.reg
+rfr = random_forest.rfr
+xgb = random_forest.xgb
+reg = random_forest.reg
 
-X_train = regression4.scaled_x
-y_train = regression4.y_train
+X_train = random_forest.scaled_x
+y_train = random_forest.y_train
 
 #Param grid for random forest
 param_grid_1 = {
