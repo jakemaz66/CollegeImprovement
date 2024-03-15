@@ -58,8 +58,8 @@ X_train3, X_test3, y_train3, y_test3 = train_test_split(X, y3, test_size=0.2, ra
 #Scaling the data
 scaler = StandardScaler()
 scaled_x = scaler.fit_transform(X_train)
-scaled_x2 = scaler.fit_transform(X_train2)
-scaled_x3 = scaler.fit_transform(X_train3)
+scaled_x2 = scaler.transform(X_train2)
+scaled_x3 = scaler.transform(X_train3)
 scaled_x_test = scaler.transform(X_test)
 scaled_x_test2 = scaler.transform(X_test2)
 scaled_x_test3 = scaler.transform(X_test3)

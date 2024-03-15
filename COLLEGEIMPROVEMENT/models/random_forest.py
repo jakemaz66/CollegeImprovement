@@ -10,7 +10,7 @@ from COLLEGEIMPROVEMENT import data_reader
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn import svm
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
@@ -55,12 +55,13 @@ X_train3, X_test3, y_train3, y_test3 = train_test_split(X, y3, test_size=0.2, ra
 
 #Scaling the data
 scaler = StandardScaler()
+#scaler = MinMaxScaler()
 scaled_x = scaler.fit_transform(X_train)
-scaled_x2 = scaler.fit_transform(X_train2)
-scaled_x3 = scaler.fit_transform(X_train3)
-scaled_x_test = scaler.fit_transform(X_test)
-scaled_x_test2 = scaler.fit_transform(X_test2)
-scaled_x_test3 = scaler.fit_transform(X_test3)
+scaled_x2 = scaler.transform(X_train2)
+scaled_x3 = scaler.transform(X_train3)
+scaled_x_test = scaler.transform(X_test)
+scaled_x_test2 = scaler.transform(X_test2)
+scaled_x_test3 = scaler.transform(X_test3)
 
 #Building Regression model
 rfr = RandomForestRegressor(max_depth= 20, min_samples_split= 5, n_estimators=50)
