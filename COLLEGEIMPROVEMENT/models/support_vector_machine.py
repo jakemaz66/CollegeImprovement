@@ -32,8 +32,20 @@ for col in columns_to_impute:
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7', 'AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR', 'UGDS',
                 'PRGMOFR', 'PCT75_EARN_WNE_P10', 'COUNT_WNE_P10', 'MD_EARN_WNE_P10', 'GRAD_DEBT_MDN_SUPP']]
 
-df_final = pd.DataFrame(columns=['University', 'Predicted Salary', 'Predicted Debt', 'Predicted Job'])
+df_final = pd.DataFrame(columns=['University', 'Predicted Salary', 'Predicted Debt', 'Predicted Job',
+                                 'Admission Rate', 'Tuition', 'Admission Test Score', 'Faculty Salary',
+                                 'Expenditures per Student', 'Student Faculty Ratio', 'Programs Offered',
+                                 'Undergraduate Enrollment'])
+
 df_final['University'] = df1['INSTNM']
+df_final['Admission Rate'] = df1['ADM_RATE']
+df_final['Tuition'] = df1['TUITIONFEE_IN']
+df_final['Admission Test Score'] = df1['ADMCON7']
+df_final['Faculty Salary'] = df1['AVGFACSAL']
+df_final['Expenditures per Student'] = df1['INEXPFTE']
+df_final['Student Faculty Ratio'] = df1['STUFACR']
+df_final['Programs Offered'] = df1['PRGMOFR']
+df_final['Undergraduate Enrollment'] = df1['UGDS']
 
 # Filling in the rest of NaNs with the iterative imputer
 columns_to_impute = ['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']

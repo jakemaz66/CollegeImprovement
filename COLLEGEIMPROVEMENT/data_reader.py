@@ -33,6 +33,7 @@ def data_reader():
     #Iterating through years and concatenating dataframes
     for year in years_list:
         df = pd.read_csv(fr'C:\Users\jakem\CollegeImprovement\COLLEGEIMPROVEMENT\data\data\MERGED{year}_PP.csv')
+        df = df[df['HIGHDEG'] >= 3]
 
         df['Year'] = year
 
@@ -68,7 +69,7 @@ def data_reader_study():
 
 if __name__ == '__main__':
     df = data_reader()
-    df.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile.csv')
+    df.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile2.csv')
     
    
 
