@@ -4,6 +4,8 @@ from COLLEGEIMPROVEMENT.models import random_forest
 from COLLEGEIMPROVEMENT.models import XGBoost
 from COLLEGEIMPROVEMENT.models import linear_regression
 from COLLEGEIMPROVEMENT.models import support_vector_machine
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 #Importing all the errors from the models
 error_debt_random = random_forest.error_debt
@@ -37,3 +39,13 @@ print(f'The Random Forest Error is: {avg_error_random}')
 print(f'The Support Vector Machine Error is: {avg_error_svm}')
 print(f'The Linear Regression Error is: {avg_error_reg}')
 print(f'The XGBoost Error is: {avg_error_xgb}')
+
+#Creating plot of errors
+plt.figure(figsize=(14, 9))
+
+sns.barplot(x='Models', y='Errors', data=errors, palette='viridis')
+
+plt.title('Regression Models and Average Error on Full Dataset')
+plt.xlabel('Model Type')
+plt.ylabel('Error')
+plt.show()
