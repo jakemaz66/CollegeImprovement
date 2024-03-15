@@ -1,5 +1,7 @@
 from sklearn.model_selection import GridSearchCV
 from COLLEGEIMPROVEMENT.models import random_forest
+from COLLEGEIMPROVEMENT.models import XGBoost
+from COLLEGEIMPROVEMENT.models import linear_regression
 import pandas as pd
 
 #Setting option to see all results
@@ -7,8 +9,8 @@ pd.set_option('display.max_colwidth', None)
 
 #Importing models
 rfr = random_forest.rfr
-xgb = random_forest.xgb
-reg = random_forest.reg
+#xgb = XGBoost.xgb
+#reg = linear_regression.reg
 
 X_train = random_forest.scaled_x
 y_train = random_forest.y_train
@@ -37,16 +39,18 @@ param_grid_3 = {
 clf = GridSearchCV(rfr, param_grid_1)
 clf.fit(X_train, y_train)
 
-clf2 = GridSearchCV(xgb, param_grid_2)
-clf2.fit(X_train, y_train)
+#clf2 = GridSearchCV(xgb, param_grid_2)
+#clf2.fit(X_train, y_train)
 
-clf3 = GridSearchCV(reg, param_grid_3)
-clf3.fit(X_train, y_train)
+#clf3 = GridSearchCV(reg, param_grid_3)
+#clf3.fit(X_train, y_train)
 
 best_params_rfr = clf.best_params_
-best_params_xgb = clf2.best_params_
-best_params_reg = clf3.best_params_
+#best_params_xgb = clf2.best_params_
+#best_params_reg = clf3.best_params_
 
+print(best_params_rfr)
+#{'max_depth': None, 'min_samples_split': 2, 'n_estimators': 150}
 #Printing the best hyperparameters in a table
 params_table = pd.DataFrame({'Model Type': ['Random Forest', 'XGBoost', 'Regression'],
         'Best Parameters for Model': [best_params_rfr, best_params_xgb, best_params_reg]})

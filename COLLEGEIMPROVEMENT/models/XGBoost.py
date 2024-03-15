@@ -25,14 +25,16 @@ df1.replace('PrivacySuppressed', np.nan, inplace=True)
 df1.dropna(subset=['PCT75_EARN_WNE_P10', 'COUNT_WNE_P10', 'MD_EARN_WNE_P10', 'GRAD_DEBT_MDN_SUPP'], inplace=True)
 
 # Filling in missing values
-columns_to_impute = ['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7', 'AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']
-for col in columns_to_impute:
-    df1[col] = df1[col].fillna(df1.groupby('INSTNM')[col].transform('mean'))
+#columns_to_impute = ['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7', 'AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']
+#for col in columns_to_impute:
+#    df1[col] = df1[col].fillna(df1.groupby('INSTNM')[col].transform('mean'))
 
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7', 'AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR', 'UGDS',
                 'PRGMOFR', 'PCT75_EARN_WNE_P10', 'COUNT_WNE_P10', 'MD_EARN_WNE_P10', 'GRAD_DEBT_MDN_SUPP']]
 
-df_final = df1['INSTNM']
+df_final = pd.DataFrame(columns=['University', 'Predicted Salary', 'Predicted Debt', 'Predicted Job', 'Enrollment'])
+df_final['University'] = df1['INSTNM']
+df_final['Enrollment'] = df1['UGDS']
 
 # Filling in the rest of NaNs with the iterative imputer
 columns_to_impute = ['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']
@@ -56,21 +58,40 @@ X_train3, X_test3, y_train3, y_test3 = train_test_split(X, y3, test_size=0.2, ra
 #Scaling the data
 scaler = StandardScaler()
 scaled_x = scaler.fit_transform(X_train)
-scaled_x_test = scaler.fit_transform(X_test)
+scaled_x2 = scaler.fit_transform(X_train2)
+scaled_x3 = scaler.fit_transform(X_train3)
+scaled_x_test = scaler.transform(X_test)
+scaled_x_test2 = scaler.transform(X_test2)
+scaled_x_test3 = scaler.transform(X_test3)
 
 xgb = XGBRegressor(learning_rate=0.1, max_depth=3, n_estimators=100)
 
 xgb.fit(scaled_x, y_train)
-predictions = xgb.predict(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']])
-df_final['Pred_COUNT_WNE_P10'] = predictions
 
-xgb.fit(scaled_x, y_train2)
-predictions = xgb.predict(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']])
-df_final['Pred_MD_EARN_WNE_P10'] = predictions
+predictions = xgb.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
+predictions_series = pd.Series(predictions, index=df_final.index)
+df_final['Predicted Job'] = predictions_series
 
-xgb.fit(scaled_x, y_train3)
-predictions = xgb.predict(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']])
-df_final['Pred_GRAD_DEBT_MDN_SUPP'] = predictions
+error_job = mean_squared_error(y_test, xgb.predict(scaled_x_test))
+print(f'Error for Job: {error_job}')
 
-#Calculating Error
-xgb_error = mean_squared_error(y_test, xgb.predict(scaled_x_test))
+xgb.fit(scaled_x2, y_train2)
+
+predictions = xgb.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
+predictions_series = pd.Series(predictions, index=df_final.index)
+df_final['Predicted Salary'] = predictions_series
+
+error_salary = mean_squared_error(y_test2, xgb.predict(scaled_x_test2))
+print(f'Error for Salary: {error_salary}')
+
+xgb.fit(scaled_x3, y_train3)
+
+predictions = xgb.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
+predictions_series = pd.Series(predictions, index=df_final.index)
+df_final['Predicted Debt'] = predictions_series
+
+error_debt = mean_squared_error(y_test3, xgb.predict(scaled_x_test3))
+print(f'Error for Debt: {error_debt}')
+
+df_final.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\RegressionOutput.csv')
+

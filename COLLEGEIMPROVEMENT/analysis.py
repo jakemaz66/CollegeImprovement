@@ -1,41 +1,33 @@
 from COLLEGEIMPROVEMENT.models import random_forest
+from COLLEGEIMPROVEMENT.models import XGBoost
+from COLLEGEIMPROVEMENT.models import linear_regression
+from COLLEGEIMPROVEMENT.models import support_vector_machine
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
 #Importing Models and Errors
-reg = random_forest.reg
-errors = random_forest.errors
-errors2 = random_forest.errors2
-df1 = random_forest.df1
-xgb_error = random_forest.xgb_error
-xgb_default_error = random_forest.xgb_default_error
+
 
 #Obtaining coefficient values form regression model
-coefficients = pd.DataFrame({'Feature': random_forest.X.columns, 'Coefficient': reg.coef_})
-
-#Obtaining predcitions from models
-recent_pred = random_forest.xgb.predict(random_forest.X_train2)
-recent_pred = np.median(recent_pred)
-actual_pred = df1[(df1['INSTNM'] == 'University of Pittsburgh-Pittsburgh Campus') & (df1['Year'] == '2019_20')]
-actual_pred = actual_pred['GRAD_DEBT_MDN_SUPP'].max()
+coefficients = pd.DataFrame({'Feature': random_forest.X.columns, 'Coefficient of Importance': random_forest.rfr.feature_importances_})
 
 
 #FIGURE1
-#plt.figure(figsize=(14, 9))
+plt.figure(figsize=(14, 9))
 
-#sns.barplot(x='Feature', y='Coefficient', data=coefficients, palette='viridis')
+sns.barplot(x='Feature', y='Coefficient', data=coefficients, palette='viridis')
 
-#plt.title('Feature Coefficients in the Linear Regression Model')
-#plt.xlabel('Coefficient Value', fontsize=16)
-#plt.ylabel('Feature', fontsize=16)
+plt.title('Feature Importances in the Randome Forest Model')
+plt.xlabel('Coefficient Value', fontsize=16)
+plt.ylabel('Feature', fontsize=16)
 
-#plt.axhline(y=0, color='black', linestyle='--', linewidth=2)
+plt.axhline(y=0, color='black', linestyle='--', linewidth=2)
 
-#plt.xticks(fontsize=14)
-#plt.yticks(fontsize=14)
-#plt.show()
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
+plt.show()
 
 
 #FIGURE2
