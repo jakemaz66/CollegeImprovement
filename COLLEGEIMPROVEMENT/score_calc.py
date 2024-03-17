@@ -66,6 +66,16 @@ duquesne_mean_score = df_grouped.loc[df_grouped['University'] == 'University of 
 rank = (df_grouped['Score'] > duquesne_mean_score).sum() + 1  
 print(f"University of Pittsburgh-Pittsburgh Campus has a mean 'Score' rank of: {rank} out of {len(df_grouped)} universities.")
 
+df_grouped = df.groupby('University')['Score'].mean().reset_index()
+duquesne_mean_score = df_grouped.loc[df_grouped['University'] == 'Carnegie Mellon University', 'Score'].values[0]
+rank = (df_grouped['Score'] > duquesne_mean_score).sum() + 1  
+print(f"Carnegie Mellon University has a mean 'Score' rank of: {rank} out of {len(df_grouped)} universities.")
+
+df_grouped = df.groupby('University')['Score'].mean().reset_index()
+duquesne_mean_score = df_grouped.loc[df_grouped['University'] == 'Duquesne University', 'Score'].values[0]
+rank = (df_grouped['Score'] > duquesne_mean_score).sum() + 1  
+print(f"Duquesne University has a mean 'Score' rank of: {rank} out of {len(df_grouped)} universities.")
+
 #Seeing top 10
 df_grouped = df.groupby('University')['Score'].mean().reset_index()
 df_top_10 = df_grouped.sort_values(by='Score', ascending=False).tail(30)

@@ -4,6 +4,7 @@ from COLLEGEIMPROVEMENT.models import random_forest
 from COLLEGEIMPROVEMENT.models import XGBoost
 from COLLEGEIMPROVEMENT.models import XGBoost_default
 from COLLEGEIMPROVEMENT.models import linear_regression
+from COLLEGEIMPROVEMENT.models import support_vector_machine
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -28,10 +29,16 @@ error_salary_reg = linear_regression.error_salary
 error_job_reg = linear_regression.error_job
 avg_error_reg= np.average([error_debt_reg, error_salary_reg, error_job_reg])
 
+error_debt_svm = support_vector_machine.error_debt
+error_salary_svm = support_vector_machine.error_salary
+error_job_svm = support_vector_machine.error_job
+avg_error_svm = np.average([error_debt_svm, error_salary_svm, error_job_svm])
+
+
 #Creating a dataframe for the average errors
 errors = pd.DataFrame({
-    'Models': ['Random Forest', 'Linear Regression', 'XGBoost', 'XGBoost Default'],
-    'Errors': [avg_error_random, avg_error_reg, avg_error_xgb, avg_error_xgb_default]
+    'Models': ['Random Forest', 'Linear Regression', 'XGBoost', 'XGBoost Default', 'Support Vector Machie'],
+    'Errors': [avg_error_random, avg_error_reg, avg_error_xgb, avg_error_xgb_default, avg_error_svm]
 })
 
 #Printing the average errors

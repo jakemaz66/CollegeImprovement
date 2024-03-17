@@ -1,6 +1,7 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 
 def seaborn_scatter(data, xcol, ycol, title, xtitle, ytitle):
@@ -29,6 +30,10 @@ if __name__ == '__main__':
     #Testing Function
     seaborn_scatter(df,df['Faculty Salary'], df['Score'], 'Average Faculty Salary vs University Score',
                     'Average Faculty Salary', 'University Score')
+    
+    correlation_matrix = np.corrcoef(df['Faculty Salary'], df['Score'])
+    correlation_coefficient = correlation_matrix[0, 1]
+    print(f'Correlation: {correlation_coefficient}')
 
 
 
