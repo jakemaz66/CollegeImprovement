@@ -2,6 +2,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 
+
 def seaborn_scatter(data, xcol, ycol, title, xtitle, ytitle):
     """
     This function shows a seaborn scatterplot of two variables
@@ -10,6 +11,9 @@ def seaborn_scatter(data, xcol, ycol, title, xtitle, ytitle):
     sns.set(style="whitegrid")  
 
     sns.scatterplot(data=data, x=xcol, y=ycol, palette="Set2")
+
+    plt.xlim(0, 40000)  
+ 
 
     plt.title(title)
     plt.xlabel(xtitle)
@@ -20,11 +24,11 @@ def seaborn_scatter(data, xcol, ycol, title, xtitle, ytitle):
 
 
 if __name__ == '__main__':
-    df = pd.read_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\ImputedData.csv')
+    df = pd.read_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\data_score.csv')
     
     #Testing Function
-    seaborn_scatter(df,df['AVGFACSAL'], df['GRAD_DEBT_MDN_SUPP'], 'Average Faculty vs. Debt of Students',
-                    'Average Faculty Salary', 'Average Debt of Students')
+    seaborn_scatter(df,df['Faculty Salary'], df['Score'], 'Average Faculty Salary vs University Score',
+                    'Average Faculty Salary', 'University Score')
 
 
 

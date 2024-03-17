@@ -1,25 +1,14 @@
-#
-# This model was the best performing
-#
-
 #Importing libraries
 from sklearn.experimental import enable_iterative_imputer 
 import pandas as pd
 import numpy as np
-from COLLEGEIMPROVEMENT import data_reader
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn import svm
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
-from sklearn.impute import KNNImputer
-from sklearn.preprocessing import PolynomialFeatures
-from xgboost import XGBRegressor
 from sklearn.impute import IterativeImputer
 
-# Reading in my dataframes
+# Reading in my dataframe
 df1 = pd.read_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile2.csv')
 
 # Replacing Privacy Suppressed Values with NaNs
@@ -27,6 +16,7 @@ df1.replace('PrivacySuppressed', np.nan, inplace=True)
 
 # Dropping columns with missing target variables
 df1.dropna(subset=['PCT75_EARN_WNE_P10', 'COUNT_WNE_P10', 'MD_EARN_WNE_P10', 'GRAD_DEBT_MDN_SUPP'], inplace=True)
+
 
 df_model = df1[['TUITIONFEE_IN', 'ADM_RATE', 'ADMCON7', 'AVGFACSAL', 'PFTFAC', 'INEXPFTE', 'STUFACR', 'UGDS',
                 'PRGMOFR', 'PCT75_EARN_WNE_P10', 'COUNT_WNE_P10', 'MD_EARN_WNE_P10', 'GRAD_DEBT_MDN_SUPP']]
@@ -81,6 +71,7 @@ scaled_x_test3 = scaler.transform(X_test3)
 #Building Regression model
 rfr = RandomForestRegressor(max_depth= 20, min_samples_split= 5, n_estimators=50)
 
+#Predicting Job Rate
 rfr.fit(scaled_x, y_train)
 
 predictions = rfr.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
@@ -90,6 +81,7 @@ df_final['Predicted Job'] = predictions_series
 error_job = mean_squared_error(y_test, rfr.predict(scaled_x_test))
 print(f'Error for Job: {error_job}')
 
+#Predicting Salary
 rfr.fit(scaled_x2, y_train2)
 
 predictions = rfr.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
@@ -99,6 +91,7 @@ df_final['Predicted Salary'] = predictions_series
 error_salary = mean_squared_error(y_test2, rfr.predict(scaled_x_test2))
 print(f'Error for Salary: {error_salary}')
 
+#Predicting Debt
 rfr.fit(scaled_x3, y_train3)
 
 predictions = rfr.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))

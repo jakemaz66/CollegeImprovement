@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-df1 = score_calc.df
+df1 = pd.read_csv(r'COLLEGEIMPROVEMENT/data/data_score.csv')
 
 def predict_uni_score(uni_name):
 
@@ -15,7 +15,9 @@ def predict_uni_score(uni_name):
 
     print(f'The Score of {uni_name} is {uni_score}')
 
+
 def top_10_unis(data):
+ 
  df1 = data.copy()  
     
  df_mean = df1.groupby('University', as_index=False)['Score'].mean()
@@ -23,12 +25,13 @@ def top_10_unis(data):
  df_mean_sorted = df_mean.sort_values(by='Score', ascending=False)
 
  df_top_10 = df_mean_sorted.head(10)
+ 
 
  sns.barplot(data=df_top_10, x='University', y='Score')
  plt.title("The Top 10 Universities by Mean Score")
  plt.xlabel("University")
  plt.ylabel("Mean Score")
- plt.xticks(rotation=45)  
+ plt.xticks(rotation=45, ha='right')  
  plt.show()
 
 

@@ -9,9 +9,18 @@ df['Undergraduate Enrollment'] = df['Undergraduate Enrollment'].fillna(df.groupb
 df['Undergraduate Enrollment'].fillna(df['Undergraduate Enrollment'].mean(), inplace=True)
 
 #Calculating Score for each university 
-df['Score'] =  (df['Predicted Salary'] / df['Predicted Debt']) + ((df['Undergraduate Enrollment'] )/df['Predicted Job'] )
-#df_Fres = df[df['University'] == 'Philadelphia College of Osteopathic Medicine']
-#df_Fres[['University', 'Score', 'Predicted Debt', 'Predicted Salary', 'Predicted Job', 'Undergraduate Enrollment']]
+mean1 = (df['Predicted Salary'] / df['Predicted Debt']).mean()
+std1 = (df['Predicted Salary'] / df['Predicted Debt']).std()
+
+mean2 = (df['Undergraduate Enrollment'] /df['Predicted Job']).mean()
+std2 = (df['Undergraduate Enrollment'] /df['Predicted Job']).std() * 2
+
+df['Score'] =  ((((df['Predicted Salary'] / df['Predicted Debt'])-mean1)/std1) + 
+(((df['Undergraduate Enrollment'] /df['Predicted Job']) - mean2)/std2))
+
+df.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\data_score.csv')
+
+
 
 #CALCULATE CORRELATIONS SCORE AND FEATURES
 corr = df[['Score', 'Admission Rate', 'Tuition', 'Admission Test Score', 'Faculty Salary',
@@ -35,10 +44,31 @@ plt.yticks(fontsize=12)
 plt.tight_layout()
 plt.show()
 
+#Making Score Graphs for specific college
+plt.figure(figsize=(14, 9))
+df_grouped = df.groupby('University')['Score'].mean().reset_index()
+df_top_10 = df_grouped.sort_values(by='Score', ascending=False).tail(10)
+df_college = df[df['University'] == 'Duquesne University']
+df_top_10 = pd.concat([df_top_10, df_college])
+
+sns.barplot(x='University', y='Score', data=df_top_10, palette='viridis')
+
+plt.title('Duquesne Score Compared to Bottom 10 Universities')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.xlabel('University')
+plt.ylabel('Score')
+plt.show()
+
+#Getting Duquesne Rank out of total
+df_grouped = df.groupby('University')['Score'].mean().reset_index()
+duquesne_mean_score = df_grouped.loc[df_grouped['University'] == 'University of Pittsburgh-Pittsburgh Campus', 'Score'].values[0]
+rank = (df_grouped['Score'] > duquesne_mean_score).sum() + 1  
+print(f"University of Pittsburgh-Pittsburgh Campus has a mean 'Score' rank of: {rank} out of {len(df_grouped)} universities.")
 
 #Seeing top 10
 df_grouped = df.groupby('University')['Score'].mean().reset_index()
-df_top_10 = df_grouped.sort_values(by='Score', ascending=False).head(30)
+df_top_10 = df_grouped.sort_values(by='Score', ascending=False).tail(30)
 print(df_top_10)
 
 df

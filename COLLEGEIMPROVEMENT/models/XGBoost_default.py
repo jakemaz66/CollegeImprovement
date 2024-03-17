@@ -6,10 +6,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
+from xgboost import XGBRegressor
 from sklearn.impute import IterativeImputer
-from sklearn.svm import SVR
 
-# Reading in my dataframe
+# Reading in my dataframes
 df1 = pd.read_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile2.csv')
 
 # Replacing Privacy Suppressed Values with NaNs
@@ -58,9 +58,9 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 X_train2, X_test2, y_train2, y_test2 = train_test_split(X, y2, test_size=0.2, random_state=42)
 X_train3, X_test3, y_train3, y_test3 = train_test_split(X, y3, test_size=0.2, random_state=42)
 
+
 #Scaling the data
 scaler = StandardScaler()
-#scaler = MinMaxScaler()
 scaled_x = scaler.fit_transform(X_train)
 scaled_x2 = scaler.transform(X_train2)
 scaled_x3 = scaler.transform(X_train3)
@@ -68,41 +68,36 @@ scaled_x_test = scaler.transform(X_test)
 scaled_x_test2 = scaler.transform(X_test2)
 scaled_x_test3 = scaler.transform(X_test3)
 
-#Building Regression model
-svm1 = SVR(kernel='poly')
+xgb = XGBRegressor()
 
 #Predicting Job Rate
-svm1.fit(scaled_x, y_train)
+xgb.fit(scaled_x, y_train)
 
-predictions = svm1.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
+predictions = xgb.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
 predictions_series = pd.Series(predictions, index=df_final.index)
 df_final['Predicted Job'] = predictions_series
 
-error_job = mean_squared_error(y_test, svm1.predict(scaled_x_test))
+error_job = mean_squared_error(y_test, xgb.predict(scaled_x_test))
 print(f'Error for Job: {error_job}')
 
 #Predicting Salary
-svm1.fit(scaled_x2, y_train2)
+xgb.fit(scaled_x2, y_train2)
 
-predictions = svm1.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
+predictions = xgb.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
 predictions_series = pd.Series(predictions, index=df_final.index)
 df_final['Predicted Salary'] = predictions_series
 
-error_salary = mean_squared_error(y_test2, svm1.predict(scaled_x_test2))
+error_salary = mean_squared_error(y_test2, xgb.predict(scaled_x_test2))
 print(f'Error for Salary: {error_salary}')
 
 #Predicting Debt
-svm1.fit(scaled_x3, y_train3)
+xgb.fit(scaled_x3, y_train3)
 
-predictions = svm1.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
+predictions = xgb.predict(scaler.transform(df_model_imputed[['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS']]))
 predictions_series = pd.Series(predictions, index=df_final.index)
 df_final['Predicted Debt'] = predictions_series
 
-error_debt = mean_squared_error(y_test3, svm1.predict(scaled_x_test3))
+error_debt = mean_squared_error(y_test3, xgb.predict(scaled_x_test3))
 print(f'Error for Debt: {error_debt}')
 
-#df_final.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\RegressionOutputHigherDegree.csv')
-
-
-
-
+df_final.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\RegressionOutputHigherDegree.csv')
