@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-df1 = pd.read_csv(r'COLLEGEIMPROVEMENT/data/data_score.csv')
 
 def predict_uni_score(uni_name):
+
+    df1 = pd.read_csv(r'COLLEGEIMPROVEMENT/data/data_score.csv')
 
     uni = df1[df1['University'] == uni_name]
     uni_score = uni['Score']
@@ -15,8 +16,9 @@ def predict_uni_score(uni_name):
 
     print(f'The Score of {uni_name} is {uni_score}')
 
-
 def top_10_unis(data):
+ 
+ df1 = pd.read_csv(r'COLLEGEIMPROVEMENT/data/data_score.csv')
  
  df1 = data.copy()  
     
@@ -37,7 +39,6 @@ def top_10_unis(data):
 
 if __name__ == '__main__':
     #predict_uni_score('Duquesne University')
-
     top_10_unis(score_calc.df)
 
     

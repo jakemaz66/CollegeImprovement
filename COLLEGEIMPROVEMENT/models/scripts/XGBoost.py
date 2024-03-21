@@ -8,6 +8,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error
 from xgboost import XGBRegressor
 from sklearn.impute import IterativeImputer
+from sklearn.ensemble import RandomForestRegressor
 
 # Reading in my dataframes
 df1 = pd.read_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile2.csv')
@@ -29,7 +30,7 @@ df_final = pd.DataFrame(columns=['University', 'Predicted Salary', 'Predicted De
 
 # Filling in the rest of NaNs with the iterative imputer
 columns_to_impute = ['ADM_RATE', 'TUITIONFEE_IN', 'ADMCON7', 'AVGFACSAL', 'INEXPFTE', 'STUFACR', 'PRGMOFR', 'UGDS', 'PFTFAC']
-iterative_imputer = IterativeImputer(max_iter=25, random_state=0)  
+iterative_imputer = IterativeImputer(estimator=RandomForestRegressor(), max_iter=25, random_state=0)  
 df_model_imputed = pd.DataFrame(iterative_imputer.fit_transform(df_model), columns=df_model.columns)
 
 df_final['University'] = df1['INSTNM']

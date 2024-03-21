@@ -1,4 +1,6 @@
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 def data_reader():
@@ -25,7 +27,7 @@ def data_reader():
                            #Target Variables
                            'PCT75_EARN_WNE_P10','COUNT_WNE_P10','MD_EARN_WNE_P10','GRAD_DEBT_MDN_SUPP',
                            'Year'
-    ]   
+    ]    
 
     #Creating Empty Dictionary to store data frames in
     dataframes = {}  
@@ -69,6 +71,32 @@ def data_reader_study():
 
 if __name__ == '__main__':
     df = data_reader()
+
+    universities_to_select = ['Philadelphia College of Osteopathic Medicine',
+                          'New York Law School',
+                          'Rosalind Franklin University of Medicine and Science',
+                          'Meharry Medical College',
+                          'Medical University of South Carolina',
+                          'Thomas Edison State University',
+                          'United States Merchant Marine Academy',
+                          'University of Texas Southwestern Medical Center',
+                          'University of California-San Francisco',
+                          'Harvard University',
+                          'Massachusetts Institute of Technology',
+                          'Princeton University']
+
+    # Selecting the universities
+    selected_universities = df[df['INSTNM'].isin(universities_to_select)]
+    avg_endowment = selected_universities.groupby('INSTNM')['ENDOWBEGIN'].mean().reset_index()
+
+    # Plotting the boxplot
+    plt.figure(figsize=(12, 6))
+    sns.boxplot(data=avg_endowment, y='ENDOWBEGIN')
+    plt.title('Spread of Endowments of Top Universities')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.show()
+
     df.to_csv(r'C:\Users\jakem\CollegeImprovement-1\COLLEGEIMPROVEMENT\data\CollegeImprovementFinalFile2.csv')
     
    
